@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <TextView
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="21dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp"
+        android:textSize="15sp"
+        android:text="The Button below will open MakePath window where user can generate optimized path for garbage collection of filled Bins." />
+
+    <Button
+        android:id="@+id/btn_open_makepath_window"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="60dp"
+        android:layout_marginLeft="60dp"
+        android:text="MakePath" />
+
+    <TextView
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="27dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp"
+        android:textSize="15sp"
+        android:text="After Garbage Collection, it is necessary to click on *JOB DONE* button to ensure the Admin that you have done your Work.\nIf you click *JOB DONE* without doing garbage collection, you may be Fined for False Information." />
+
+    <Button
+        android:id="@+id/btn_flush_bin_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginLeft="40dp"
+        android:text="Job Done" />
+
+
+</LinearLayout>
