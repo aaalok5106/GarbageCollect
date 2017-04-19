@@ -86,7 +86,6 @@ public class AfterLogin1 extends AppCompatActivity
         alert.show();
 
 
-
     }
 
     @Override
