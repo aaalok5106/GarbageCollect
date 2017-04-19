@@ -30,7 +30,7 @@ public class BackgroundWorker extends AsyncTask<String, Void, String> {
 
     public static String CURRENT_USER_NAME;
     public static String START_POSITION_SELECTED = "noWork" ;
-    public static String IP_MAIN = "http://172.16.187.17/smartbin/";
+    public static String IP_MAIN = "http://172.16.186.207/smartbin/";
 
     Context context;
     //AlertDialog alertDialog;
