@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -53,6 +54,7 @@ import static com.mridul.garbagecollect.BackgroundWorker.IP_MAIN;
 public class FragmentBinMarkers extends Fragment implements OnMapReadyCallback{
 
     GoogleMap mGoogleMap;
+    View mapView;
 
     String url_locate_filled_bins = IP_MAIN+"locate_filled_bins.php";
 
@@ -127,7 +129,6 @@ public class FragmentBinMarkers extends Fragment implements OnMapReadyCallback{
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
         gotoLocationZoom(25.536014,84.8488763, 8);
-
         if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             //    ActivityCompat#requestPermissions
@@ -138,7 +139,9 @@ public class FragmentBinMarkers extends Fragment implements OnMapReadyCallback{
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
+
         mGoogleMap.setMyLocationEnabled(true);
+
     }
 
     private void gotoLocationZoom(double lat, double lng, float zoom) {
