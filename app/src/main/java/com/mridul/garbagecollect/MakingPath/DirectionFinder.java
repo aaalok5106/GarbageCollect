@@ -33,16 +33,18 @@ public class DirectionFinder {
     private DirectionFinderListener listener;
     private String origin;
     private String destination;
+    private String ORIGIN_BIN_ID ;
 
-    public DirectionFinder(DirectionFinderListener listener, String origin, String destination) {
+    public DirectionFinder(DirectionFinderListener listener, String origin, String destination, String origin_bin_id) {
         this.listener = listener;
         this.origin = origin;
         this.destination = destination;
+        ORIGIN_BIN_ID = origin_bin_id;
     }
 
     public void execute() throws UnsupportedEncodingException {
         listener.onDirectionFinderStart();
-        new DownloadRawData().execute(createUrl());
+        new DownloadRawData().execute(createUrl(), ORIGIN_BIN_ID);
 
 
     }
@@ -62,9 +64,11 @@ public class DirectionFinder {
 
     private class DownloadRawData extends AsyncTask<String, Void, String> {
 
+        String origin_id_of_bin;
         @Override
         protected String doInBackground(String... params) {
             String link = params[0];
+            origin_id_of_bin = params[1];
             try {
                 URL url = new URL(link);
                 InputStream is = url.openConnection().getInputStream();
@@ -89,7 +93,7 @@ public class DirectionFinder {
         @Override
         protected void onPostExecute(String res) {
             try {
-                parseJSon(res);
+                parseJSon(res, origin_id_of_bin);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -102,7 +106,7 @@ public class DirectionFinder {
      * @param data
      * @throws JSONException
      */
-    private void parseJSon(String data) throws JSONException {
+    private void parseJSon(String data, String origin_id_of_bin) throws JSONException {
         if (data == null)
             return;
         int dist = 0;
@@ -139,7 +143,7 @@ public class DirectionFinder {
             routes.add(route);
         }
 
-        listener.onDirectionFinderSuccess(routes, dist, time);
+        listener.onDirectionFinderSuccess(routes, dist, time, origin_id_of_bin);
     }
 
     private List<LatLng> decodePolyLine(final String poly) {

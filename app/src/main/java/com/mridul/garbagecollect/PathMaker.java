@@ -51,6 +51,7 @@ public class PathMaker extends FragmentActivity implements OnMapReadyCallback, D
 
     private static int netDISTANCE = 0;
     private static int netTIME = 0;
+    private static int checkPOINT = 0;
 
 
     private GoogleMap mMap;
@@ -134,6 +135,7 @@ public class PathMaker extends FragmentActivity implements OnMapReadyCallback, D
     private void sendRequest() {
         netDISTANCE = 0 ;
         netTIME = 0 ;
+        checkPOINT = 0 ;
 
 
         //String[] checking = {"25.538794,84.850326","25.534607,84.853888","25.538944,84.858813","25.543116,84.862117", "25.547724,84.863919", "25.554132,84.869112"};
@@ -145,6 +147,8 @@ public class PathMaker extends FragmentActivity implements OnMapReadyCallback, D
             String lat_e = LATITUDE.get(i+1).toString();
             String lng_e = LONGITUDE.get(i+1).toString();
 
+            String origin_bin_id = BIN_ID.get(i).toString();
+
             String origin = lat_s+","+lng_s ;
             String destination = lat_e+","+lng_e ;
 
@@ -152,7 +156,7 @@ public class PathMaker extends FragmentActivity implements OnMapReadyCallback, D
             Log.d("Destination", destination);
 
             try {
-                new DirectionFinder(this, origin, destination).execute();
+                new DirectionFinder(this, origin, destination, origin_bin_id).execute();
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
@@ -194,7 +198,7 @@ public class PathMaker extends FragmentActivity implements OnMapReadyCallback, D
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         LatLng pos = new LatLng(25.536014,84.8488763);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 8));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 6));
 
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -236,7 +240,7 @@ public class PathMaker extends FragmentActivity implements OnMapReadyCallback, D
     }
 
     @Override
-    public void onDirectionFinderSuccess(List<Route> routes, int dist, int time) {
+    public void onDirectionFinderSuccess(List<Route> routes, int dist, int time, String origin_id_of_bin) {
         netDISTANCE += dist ;
         netTIME += time ;
         String displayDistance = ""+(netDISTANCE/1000)+"."+(netDISTANCE%1000)+" KM";
@@ -256,12 +260,19 @@ public class PathMaker extends FragmentActivity implements OnMapReadyCallback, D
             ((TextView) findViewById(R.id.tvDistance)).setText(displayDistance);
 
 
-            originMarkers.add(mMap.addMarker(new MarkerOptions()
-                    .title(route.startAddress)
-                    .position(route.startLocation)));
-            destinationMarkers.add(mMap.addMarker(new MarkerOptions()
-                    .title(route.endAddress)
-                    .position(route.endLocation)));
+            if(origin_id_of_bin.trim().equals("BINSTART")){
+                originMarkers.add(mMap.addMarker(new MarkerOptions()
+                        .title("START POSITION")
+                        .snippet("Your Start Position")
+                        .position(route.startLocation)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.start_pos_marker_small))));
+            }else{
+                checkPOINT += 1 ;
+                originMarkers.add(mMap.addMarker(new MarkerOptions()
+                        .title("CHECKPOINT "+checkPOINT)
+                        .snippet("Bin id : "+origin_id_of_bin)
+                        .position(route.startLocation)));
+            }
 
             PolylineOptions polylineOptions = new PolylineOptions().
                     geodesic(true).

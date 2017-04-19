@@ -106,7 +106,7 @@ public class BackgroundWorkerStartPosition extends AsyncTask<String, Void, Strin
 
         progressDialog.dismiss();
 
-        Toast.makeText(context, result, Toast.LENGTH_LONG);
+        Toast.makeText(context, result, Toast.LENGTH_LONG).show();
 
         if( result.trim().equals("Start Position Successfully Inserted")){
 
