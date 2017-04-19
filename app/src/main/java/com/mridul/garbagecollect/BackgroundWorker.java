@@ -154,6 +154,7 @@ public class BackgroundWorker extends AsyncTask<String, Void, String> {
         Intent intent = new Intent(context,AfterLogin1.class);
         /*intent.putExtra("email",EMAIL);*/
         context.startActivity(intent);
+
     }
 
     private void gotoLoginLayout() {
