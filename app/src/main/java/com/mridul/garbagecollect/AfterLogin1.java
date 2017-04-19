@@ -19,9 +19,9 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import static com.mridul.garbagecollect.BackgroundWorker.ACCOUNT_INFO_json_MOB_NO;
-import static com.mridul.garbagecollect.BackgroundWorker.ACCOUNT_INFO_json_NAME;
-import static com.mridul.garbagecollect.BackgroundWorker.ACCOUNT_INFO_json_VEHICLE_NO;
+import static com.mridul.garbagecollect.BackgroundWorkerAcountInfo.ACCOUNT_INFO_json_MOB_NO;
+import static com.mridul.garbagecollect.BackgroundWorkerAcountInfo.ACCOUNT_INFO_json_NAME;
+import static com.mridul.garbagecollect.BackgroundWorkerAcountInfo.ACCOUNT_INFO_json_VEHICLE_NO;
 import static com.mridul.garbagecollect.BackgroundWorker.CURRENT_USER_NAME;
 
 public class AfterLogin1 extends AppCompatActivity
@@ -152,10 +152,7 @@ public class AfterLogin1 extends AppCompatActivity
                 fragment.setArguments(bundle);
 
                 break;
-            case R.id.app_info:
-                // handle clicks here
-                Toast.makeText(this,"app info Clicked",Toast.LENGTH_LONG).show();
-                break;
+
         }
 
 

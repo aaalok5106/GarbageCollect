@@ -28,7 +28,7 @@ public class FragmentHome extends Fragment {
 
         //Log.d("current email", ""+email_user);
         String type="accountInfo";
-        BackgroundWorker backgroundWorker = new BackgroundWorker(getContext());
+        BackgroundWorkerAcountInfo backgroundWorker = new BackgroundWorkerAcountInfo(getContext());
         backgroundWorker.execute(type, CURRENT_USER_NAME);
 
         return v;

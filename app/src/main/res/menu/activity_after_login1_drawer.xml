@@ -3,13 +3,16 @@
 
     <group android:checkableBehavior="single">
         <item android:id="@+id/navigation_home"
+            android:icon="@drawable/home_icon"
             android:title="Home" />
 
         <item android:id="@+id/navigation_bin_locations"
+            android:icon="@drawable/bin_location"
             android:title="Filled Bin Locations" />
 
 
         <item android:id="@+id/navigation_pathMaker"
+            android:icon="@drawable/path_icon"
             android:title="Path Maker" />
 
 
@@ -19,12 +22,9 @@
         <menu>
             <item
                 android:id="@+id/account_info"
-                android:icon="@drawable/ic_menu_share"
+                android:icon="@drawable/info_icon"
                 android:title="Account Info" />
-            <item
-                android:id="@+id/app_info"
-                android:icon="@drawable/ic_menu_send"
-                android:title="App Info" />
+
         </menu>
     </item>
 

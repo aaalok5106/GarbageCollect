@@ -1,9 +1,10 @@
 package com.mridul.garbagecollect;
 
+import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -17,34 +18,38 @@ import java.net.URL;
 import static com.mridul.garbagecollect.BackgroundWorker.IP_MAIN;
 
 
-public class BackgroundWorkerPathMaker extends AsyncTask<String, Void, String> {
+public class BackgroundWorkerFlushBinData extends AsyncTask<String, Void, String>{
 
     Context context;
+    ProgressDialog pd ;
 
-    public BackgroundWorkerPathMaker(Context context1){
+    public BackgroundWorkerFlushBinData(Context context1){
         context = context1;
     }
 
     @Override
     protected void onPreExecute() {
+        pd = new ProgressDialog(context);
+        pd.setTitle("Please Wait");
+        pd.setMessage("Request in Progress...");
+        pd.show();
     }
 
     @Override
     protected String doInBackground(String... params) {
-
         String type = params[0];
-        String make_path_url = IP_MAIN+"algo_input.php";
+        String flush_filled_bins = IP_MAIN + "history.php";
 
-        if (type.equals("forMakingPath")){
-            //connect & get string of data.
+        if (type.equals("flushFilledBins")){
+
             InputStream is = null;
             String line = null;
 
             try {
-                URL url = new URL(make_path_url);
+                URL url = new URL(flush_filled_bins);
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
-                con.setRequestMethod("GET");
+                con.setRequestMethod("POST");
                 is = new BufferedInputStream(con.getInputStream());
 
                 BufferedReader br=new BufferedReader(new InputStreamReader(is));
@@ -58,8 +63,9 @@ public class BackgroundWorkerPathMaker extends AsyncTask<String, Void, String> {
                     }
                 }
 
-                String data = sb.toString();
-                Log.d("String from server : ", "" + data);
+                String data = "";
+                data = sb.toString();
+
 
                 return data;
             } catch (MalformedURLException e) {
@@ -77,25 +83,22 @@ public class BackgroundWorkerPathMaker extends AsyncTask<String, Void, String> {
             }
 
         }
+
         return null;
     }
 
     @Override
-    protected void onProgressUpdate(Void... values) {
+    protected void onPostExecute(String data) {
+        pd.dismiss();
+
+        Log.d("String from server : ", "" + data);
+
+        if(data.trim().equals("Flushing Done")){
+            Toast.makeText(context, "FLUSHING successfully Done", Toast.LENGTH_LONG).show();
+        }else{
+            Toast.makeText(context, "Some ERROR occurred During flushing . You may Try again .", Toast.LENGTH_LONG).show();
+        }
 
     }
-
-    @Override
-    protected void onPostExecute(String result) {
-
-
-
-        Intent intent = new Intent(context,PathMaker.class);
-        intent.putExtra("jsonArray",result);
-        context.startActivity(intent);
-
-    }
-
-
 
 }

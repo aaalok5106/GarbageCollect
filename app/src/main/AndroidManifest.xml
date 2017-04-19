@@ -38,7 +38,8 @@
             android:name=".AfterLogin1"
             android:label="@string/title_activity_after_login1"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".PathMaker"></activity>
+        <activity android:name=".PathMaker" />
+        <activity android:name=".SelectStartPosition"></activity>
     </application>
 
 </manifest>

@@ -2,15 +2,10 @@ package com.mridul.garbagecollect;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -24,20 +19,16 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLEncoder;
 
+import static com.mridul.garbagecollect.BackgroundWorker.IP_MAIN;
+import static com.mridul.garbagecollect.BackgroundWorker.START_POSITION_SELECTED;
 
 
-public class BackgroundWorker extends AsyncTask<String, Void, String> {
-
-    public static String CURRENT_USER_NAME;
-    public static String START_POSITION_SELECTED = "noWork" ;
-    public static String IP_MAIN = "http://172.16.187.17/smartbin/";
+public class BackgroundWorkerStartPosition extends AsyncTask<String, Void, String> {
 
     Context context;
-    //AlertDialog alertDialog;
     ProgressDialog progressDialog;
 
-
-    BackgroundWorker(Context context1){
+    public BackgroundWorkerStartPosition(Context context1){
         context = context1;
     }
 
@@ -45,16 +36,18 @@ public class BackgroundWorker extends AsyncTask<String, Void, String> {
     protected String doInBackground(String... params) {
         String type = params[0];
 
-        String login_url = IP_MAIN+"DriverManagement/driver_login.php";
+        String path_starting_point_url = IP_MAIN+"path_start_position.php";
 
+        if (type.equals("pathStartingPosition")){
+            String placeId = params[1];
+            String name = params[2];
+            String address = params[3];
+            String lat = params[4];
+            String lng = params[5];
 
-        if (type.equals("login")) {
-            String userName = params[1];
-            CURRENT_USER_NAME = userName;
-            String password = params[2];
             URL url = null;
             try {
-                url = new URL(login_url);
+                url = new URL(path_starting_point_url);
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setRequestMethod("POST");
                 httpURLConnection.setDoOutput(true);
@@ -62,8 +55,11 @@ public class BackgroundWorker extends AsyncTask<String, Void, String> {
 
                 OutputStream outputStream = httpURLConnection.getOutputStream();
                 BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
-                String postdata = URLEncoder.encode("user_name", "UTF-8") + "=" + URLEncoder.encode(userName, "UTF-8") + "&"
-                        + URLEncoder.encode("password", "UTF-8") + "=" + URLEncoder.encode(password, "UTF-8");
+                String postdata = URLEncoder.encode("email", "UTF-8") + "=" + URLEncoder.encode(placeId, "UTF-8") + "&"
+                        + URLEncoder.encode("name", "UTF-8") + "=" + URLEncoder.encode(name, "UTF-8") + "&"
+                        + URLEncoder.encode("mob_no", "UTF-8") + "=" + URLEncoder.encode(address, "UTF-8") + "&"
+                        + URLEncoder.encode("lat", "UTF-8") + "=" + URLEncoder.encode(lat, "UTF-8") + "&"
+                        + URLEncoder.encode("lng", "UTF-8") + "=" + URLEncoder.encode(lng, "UTF-8");
                 bufferedWriter.write(postdata);
                 bufferedWriter.flush();
                 bufferedWriter.close();
@@ -76,6 +72,8 @@ public class BackgroundWorker extends AsyncTask<String, Void, String> {
                 while ((line = bufferedReader.readLine()) != null) {
                     result += line;
                 }
+
+                Log.d("String from server :", result);
                 bufferedReader.close();
                 inputStream.close();
                 httpURLConnection.disconnect();
@@ -87,19 +85,14 @@ public class BackgroundWorker extends AsyncTask<String, Void, String> {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-
         }
 
-        return null ;
+        return null;
     }
+
 
     @Override
     protected void onPreExecute() {
-
-        //alertDialog = new AlertDialog.Builder(context).create();
-        //alertDialog.setTitle("Status");
-
 
         progressDialog = new ProgressDialog(context);
         progressDialog.setTitle("Please Wait");
@@ -108,61 +101,20 @@ public class BackgroundWorker extends AsyncTask<String, Void, String> {
 
     }
 
-
-
     @Override
     protected void onPostExecute(String result) {
 
-        //alertDialog.setMessage(result);
-        //alertDialog.show();
-
         progressDialog.dismiss();
 
+        Toast.makeText(context, result, Toast.LENGTH_LONG);
 
-        Toast.makeText(context, result, Toast.LENGTH_LONG).show();
+        if( result.trim().equals("Start Position Successfully Inserted")){
 
+            // Important...
+            START_POSITION_SELECTED = "YES" ;
 
-
-        if(result.trim().equals("You are successfully Logged In")) {
-
-            START_POSITION_SELECTED = "NO" ;
-            /**
-             * on successful log in , opening AfterLogin1 Activity...
-             */
-            openAfterLogin();
 
         }
-        else if(result.trim().equals("Sorry! Input credentials are WRONG...Please Login with valid credentials!") ){
-            /**
-             * else returning to login page again...
-             * After registration , also , returning to login activity...
-             */
-            gotoLoginLayout();
-        }else {
-            // Do nothing.
-        }
-        //alertDialog.dismiss();
+
     }
-
-    @Override
-    protected void onProgressUpdate(Void... values) {
-        super.onProgressUpdate(values);
-    }
-
-
-    private void openAfterLogin() {
-        Intent intent = new Intent(context,AfterLogin1.class);
-        /*intent.putExtra("email",EMAIL);*/
-        context.startActivity(intent);
-    }
-
-    private void gotoLoginLayout() {
-        Intent intent = new Intent(context,LoginActivity.class);
-        context.startActivity(intent);
-    }
-
-
-
-
-
 }

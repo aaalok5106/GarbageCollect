@@ -47,12 +47,14 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import static com.mridul.garbagecollect.BackgroundWorker.IP_MAIN;
+
 
 public class FragmentBinMarkers extends Fragment implements OnMapReadyCallback{
 
     GoogleMap mGoogleMap;
 
-    String url_locate_filled_bins = "http://172.16.176.179/locate_filled_bins.php";
+    String url_locate_filled_bins = IP_MAIN+"locate_filled_bins.php";
 
     ArrayList<String> lat=new ArrayList<>();    //used in downloader() fn.
     ArrayList<String> lng=new ArrayList<>();    //used in downloader() fn.

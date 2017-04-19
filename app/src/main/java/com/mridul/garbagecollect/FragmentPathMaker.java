@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import static com.mridul.garbagecollect.BackgroundWorker.START_POSITION_SELECTED;
+
 
 public class FragmentPathMaker extends Fragment {
 
@@ -31,9 +33,27 @@ public class FragmentPathMaker extends Fragment {
         btn_open_pathmaker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String type = "forMakingPath";
-                BackgroundWorkerPathMaker bgwork = new BackgroundWorkerPathMaker(getContext());
-                bgwork.execute(type);
+
+                if(START_POSITION_SELECTED.equals("YES")){
+                    String type = "forMakingPath";
+                    BackgroundWorkerPathMaker bgwork = new BackgroundWorkerPathMaker(getContext());
+                    bgwork.execute(type);
+                }
+                else if(START_POSITION_SELECTED.equals("NO")){
+
+                    android.support.v7.app.AlertDialog.Builder alert = new android.support.v7.app.AlertDialog.Builder(getContext());
+                    alert.setTitle("Important Notice!!");
+                    alert.setMessage("Please, First choose Start Position of the optimized path to be made .");
+                    alert.setPositiveButton("Choose", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            Intent intent10 = new Intent(getContext(), SelectStartPosition.class);
+                            startActivity(intent10);
+                        }
+                    });
+                    alert.show();
+                }
             }
         });
 
@@ -48,8 +68,11 @@ public class FragmentPathMaker extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        Toast.makeText(getContext(),"Do Flushing Here",Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getContext(),"Do Flushing Here",Toast.LENGTH_LONG).show();
                         // Do flush Job here...
+                        String type = "flushFilledBins";
+                        BackgroundWorkerFlushBinData bwf = new BackgroundWorkerFlushBinData(getContext());
+                        bwf.execute(type);
                     }
                 });
                 alert.setNegativeButton("Not Now", null);
