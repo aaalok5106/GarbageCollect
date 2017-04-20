@@ -1,7 +1,9 @@
 package com.mridul.garbagecollect;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -21,10 +23,20 @@ public class LoginActivity extends AppCompatActivity {
 
     EditText userName, password ;
 
+    private Handler mHandler = new Handler();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        if(!isNetworkAvailable(this)) {
+            Toast.makeText(this,"No Internet connection",Toast.LENGTH_LONG).show();
+            mHandler.postDelayed(new Runnable() {
+                public void run() {
+                    finish(); //Calling this method to close this activity when internet is not available.
+                }
+            }, 2000);
+        }
 
         userName = (EditText)findViewById(R.id.login_userName);
         password = (EditText)findViewById(R.id.login_password);
@@ -74,9 +86,18 @@ public class LoginActivity extends AppCompatActivity {
                 a.addCategory(Intent.CATEGORY_HOME);
                 a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(a);
+                finish();
                 System.exit(0);
             }
-        }, 1000);
+        }, 1);
+    }
+
+    public static boolean isNetworkAvailable(Context context) {
+        ConnectivityManager conMan = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if(conMan.getActiveNetworkInfo() != null && conMan.getActiveNetworkInfo().isConnected())
+            return true;
+        else
+            return false;
     }
 }
 
