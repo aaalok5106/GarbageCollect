@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import static com.mridul.garbagecollect.BackgroundWorker.CURRENT_USER_NAME;
 import static com.mridul.garbagecollect.BackgroundWorker.START_POSITION_SELECTED;
 
 
@@ -72,7 +73,7 @@ public class FragmentPathMaker extends Fragment {
                         // Do flush Job here...
                         String type = "flushFilledBins";
                         BackgroundWorkerFlushBinData bwf = new BackgroundWorkerFlushBinData(getContext());
-                        bwf.execute(type);
+                        bwf.execute(type, CURRENT_USER_NAME);
                     }
                 });
                 alert.setNegativeButton("Not Now", null);
