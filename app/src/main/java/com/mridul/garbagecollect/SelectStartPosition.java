@@ -3,6 +3,7 @@ package com.mridul.garbagecollect;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +20,8 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
 
+import static com.mridul.garbagecollect.LoginActivity.isNetworkAvailable;
+
 public class SelectStartPosition extends AppCompatActivity {
 
     private static final int FINE_LOCATION_REQUEST_CODE_INSTALL_BIN = 110 ;
@@ -32,11 +35,20 @@ public class SelectStartPosition extends AppCompatActivity {
     // WebView webView ;
     TextView tvDetails ;
 
+    private Handler mHandler = new Handler();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_start_position);
 
+        if(!isNetworkAvailable(this)) {
+            Toast.makeText(this,"No Internet connection",Toast.LENGTH_LONG).show();
+            mHandler.postDelayed(new Runnable() {
+                public void run() {
+                    finish(); //Calling this method to close this activity when internet is not available.
+                }
+            }, 2000);
+        }
 
         Toolbar tbar = (Toolbar)findViewById(R.id.tbar_start_path_position);
         tbar.setTitle("Start Position");
@@ -145,4 +157,10 @@ public class SelectStartPosition extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+
+        finish();
+    }
 }

@@ -3,6 +3,7 @@ package com.mridul.garbagecollect;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
@@ -23,17 +24,27 @@ import static com.mridul.garbagecollect.BackgroundWorkerAcountInfo.ACCOUNT_INFO_
 import static com.mridul.garbagecollect.BackgroundWorkerAcountInfo.ACCOUNT_INFO_json_NAME;
 import static com.mridul.garbagecollect.BackgroundWorkerAcountInfo.ACCOUNT_INFO_json_VEHICLE_NO;
 import static com.mridul.garbagecollect.BackgroundWorker.CURRENT_USER_NAME;
+import static com.mridul.garbagecollect.LoginActivity.isNetworkAvailable;
 
 public class AfterLogin1 extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     public static Toolbar toolbar;
 
+    private Handler mHandler = new Handler();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_after_login1);
 
+        if(!isNetworkAvailable(this)) {
+            Toast.makeText(this,"No Internet connection",Toast.LENGTH_LONG).show();
+            mHandler.postDelayed(new Runnable() {
+                public void run() {
+                    finish(); //Calling this method to close this activity when internet is not available.
+                }
+            }, 2000);
+        }
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("GarbageCollect");
@@ -80,6 +91,7 @@ public class AfterLogin1 extends AppCompatActivity
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent(AfterLogin1.this, LoginActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
         alert.setNegativeButton("No", null);
@@ -108,6 +120,7 @@ public class AfterLogin1 extends AppCompatActivity
                 // handle clicks here
                 startActivity(new Intent(this,LoginActivity.class));
                 Toast.makeText(this,"You have successfully Logged Out "+CURRENT_USER_NAME,Toast.LENGTH_LONG).show();
+                finish();
                 break;
         }
 
